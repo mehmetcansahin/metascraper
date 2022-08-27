@@ -49,6 +49,51 @@ impl HtmlParser<'_> {
         }
     }
 
+    fn get_rss(&self) -> Option<Vec<Rss>> {
+        let node_option = self.dom.query_selector(r#"link[type*="rss"]"#);
+        if let Some(nodes) = node_option {
+            let mut list: Vec<Rss> = Vec::new();
+            for node in nodes {
+                let href = node
+                    .get(self.parser)
+                    .unwrap()
+                    .as_tag()
+                    .unwrap()
+                    .attributes()
+                    .get("href")
+                    .flatten()
+                    .unwrap()
+                    .try_as_utf8_str()
+                    .unwrap()
+                    .to_string();
+                let title = node
+                    .get(self.parser)
+                    .unwrap()
+                    .as_tag()
+                    .unwrap()
+                    .attributes()
+                    .get("title")
+                    .flatten()
+                    .unwrap()
+                    .try_as_utf8_str()
+                    .unwrap()
+                    .to_string();
+                let rss = Rss {
+                    href,
+                    title: Some(title),
+                };
+                list.push(rss);
+            }
+            if list.len() > 0 {
+                Some(list)
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    }
+
     fn get_title(&self) -> Option<String> {
         if let Some(value) = self.get_element_intext("title") {
             Some(value)
@@ -75,6 +120,16 @@ impl HtmlParser<'_> {
     fn get_canonical(&self) -> Option<String> {
         self.get_element_attr("link[rel=canonical]", "href")
     }
+
+    fn get_language(&self) -> Option<String> {
+        self.get_element_attr("html", "lang")
+    }
+}
+
+#[derive(Debug)]
+pub struct Rss {
+    pub href: String,
+    pub title: Option<String>,
 }
 
 #[derive(Debug)]
@@ -82,6 +137,8 @@ pub struct PageInfo {
     pub title: Option<String>,
     pub description: Option<String>,
     pub canonical: Option<String>,
+    pub language: Option<String>,
+    pub rss: Option<Vec<Rss>>,
 }
 
 impl PageInfo {
@@ -92,10 +149,14 @@ impl PageInfo {
         let title = html_parser.get_title();
         let description = html_parser.get_description();
         let canonical = html_parser.get_canonical();
+        let language = html_parser.get_language();
+        let rss = html_parser.get_rss();
         PageInfo {
             title,
             description,
             canonical,
+            language,
+            rss,
         }
     }
 }
@@ -110,7 +171,7 @@ mod tests {
     }
 
     #[test]
-    fn test_title() {
+    fn test_page() {
         let page_info = parse_from_test_str();
         assert_eq!(
             page_info.title,
@@ -119,11 +180,7 @@ mod tests {
                     .to_string()
             )
         );
-    }
-
-    #[test]
-    fn test_description() {
-        let page_info = parse_from_test_str();
+        assert_eq!(page_info.language, Some("tr-TR".to_string()));
         assert_eq!(
             page_info.description,
             Some(
@@ -131,14 +188,13 @@ mod tests {
                     .to_string()
             )
         );
-    }
-
-    #[test]
-    fn test_canonical() {
-        let page_info = parse_from_test_str();
         assert_eq!(
             page_info.canonical,
             Some("https://ceotudent.com/ingiliz-dizileri".to_string())
+        );
+        assert_eq!(
+            page_info.rss.unwrap().first().unwrap().href,
+            "rss.xml".to_string()
         );
     }
 }

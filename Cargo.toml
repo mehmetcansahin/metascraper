@@ -6,4 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tl = { version = "0.7.6", features = ["simd"] }
+tl = { version = "0.7.7", features = ["simd"] }
