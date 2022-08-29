@@ -124,6 +124,44 @@ impl HtmlParser<'_> {
     fn get_language(&self) -> Option<String> {
         self.get_element_attr("html", "lang")
     }
+
+    fn get_metatags(&self) -> Option<Vec<Metatag>> {
+        let mut metatags: Vec<Metatag> = Vec::new();
+        let node_option = self.dom.query_selector(r#"meta"#);
+        if let Some(nodes) = node_option {
+            for node in nodes {
+                let node = node.get(self.parser).unwrap();
+                if let Some(tag) = node.as_tag() {
+                    let name = if let Some(attr) = tag.attributes().get("name").flatten() {
+                        Some(attr.as_utf8_str().to_string())
+                    } else if let Some(attr) = tag.attributes().get("property").flatten() {
+                        Some(attr.as_utf8_str().to_string())
+                    } else {
+                        None
+                    };
+                    let content = if let Some(attr) = tag.attributes().get("content").flatten() {
+                        Some(attr.as_utf8_str().to_string())
+                    } else if let Some(attr) = tag.attributes().get("description").flatten() {
+                        Some(attr.as_utf8_str().to_string())
+                    } else {
+                        None
+                    };
+                    if name.is_some() && content.is_some() {
+                        let nt = Metatag {
+                            name: name.unwrap(),
+                            content: content.unwrap(),
+                        };
+                        metatags.push(nt);
+                    }
+                }
+            }
+        }
+        if metatags.is_empty() {
+            None
+        } else {
+            Some(metatags)
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -133,12 +171,19 @@ pub struct Rss {
 }
 
 #[derive(Debug)]
+pub struct Metatag {
+    pub name: String,
+    pub content: String,
+}
+
+#[derive(Debug)]
 pub struct PageInfo {
     pub title: Option<String>,
     pub description: Option<String>,
     pub canonical: Option<String>,
     pub language: Option<String>,
     pub rss: Option<Vec<Rss>>,
+    pub metatags: Option<Vec<Metatag>>,
 }
 
 impl PageInfo {
@@ -151,12 +196,14 @@ impl PageInfo {
         let canonical = html_parser.get_canonical();
         let language = html_parser.get_language();
         let rss = html_parser.get_rss();
+        let metatags = html_parser.get_metatags();
         PageInfo {
             title,
             description,
             canonical,
             language,
             rss,
+            metatags,
         }
     }
 }
@@ -173,6 +220,7 @@ mod tests {
     #[test]
     fn test_page() {
         let page_info = parse_from_test_str();
+        println!("{:?}", page_info);
         assert_eq!(
             page_info.title,
             Some(
