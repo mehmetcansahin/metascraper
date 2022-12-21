@@ -4,7 +4,7 @@ struct HtmlParser<'a> {
 }
 
 impl HtmlParser<'_> {
-    fn new<'a>(dom: &'a tl::VDom<'a>, parser: &'a tl::Parser<'a>) -> HtmlParser {
+    fn new<'a>(dom: &'a tl::VDom<'a>, parser: &'a tl::Parser<'a>) -> HtmlParser<'a> {
         HtmlParser { dom, parser }
     }
 
@@ -137,5 +137,17 @@ mod tests {
             Some("https://mehmetcan.sahin.dev".to_string())
         );
         assert_eq!(page_info.rss, Some("rss.xml".to_string()));
+    }
+
+    #[test]
+    fn test_from_website() {
+        let resp = reqwest::blocking::get("https://mehmetcan.sahin.dev/")
+            .unwrap()
+            .text()
+            .unwrap();
+        let page_info = PageInfo::from_str(&resp);
+        assert_eq!(page_info.title, Some("Mehmetcan Şahin".to_string()));
+        assert_eq!(page_info.language, Some("en".to_string()));
+        assert_eq!(page_info.description, Some("Personal Page".to_string()));
     }
 }
