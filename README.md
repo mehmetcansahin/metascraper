@@ -1,5 +1,7 @@
 # MetaScraper
 
+MetaScraper is a extracts metadata information of a website.
+
 ## Usage
 
 Add the following line to your Cargo.toml file:
