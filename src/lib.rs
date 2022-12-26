@@ -11,7 +11,8 @@
 //!
 //! ```
 //! use metascraper::MetaScraper;
-//!
+//!1
+//! let input = include_str!("test.html");
 //! let metascraper = MetaScraper::parse(input).unwrap();
 //! let metadata = metascraper.metadata();
 //! ```
