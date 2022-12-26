@@ -1,6 +1,6 @@
 [package]
 name = "metascraper"
-version = "0.2.0"
+version = "0.2.1"
 description = "MetaScraper is a extracts metadata information of a website."
 authors = ["Mehmetcan ŞAHİN <sahinmcan@gmail.com>"]
 license = "MIT"
