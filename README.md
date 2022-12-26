@@ -1,8 +1,8 @@
 # MetaScraper
+
 [![crates.io](https://img.shields.io/crates/v/metascraper.svg)](https://crates.io/crates/metascraper)
 [![Released API docs](https://docs.rs/metascraper/badge.svg)](https://docs.rs/metascraper)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-
 
 MetaScraper is a extracts metadata information of a website.
 
@@ -32,6 +32,10 @@ println!("{:?}", metadata);
 //         ])
 // }
 ```
+
+## TODO
+
+- Example
 
 ## License
 

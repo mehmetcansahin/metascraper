@@ -1,6 +1,6 @@
 [package]
 name = "metascraper"
-version = "0.1.0"
+version = "0.2.0"
 description = "MetaScraper is a extracts metadata information of a website."
 authors = ["MehmetCan ŞAHİN <sahinmcan@gmail.com>"]
 license = "MIT"
@@ -13,3 +13,10 @@ edition = "2021"
 
 [dependencies]
 tl = { version = "0.7.7" }
+
+[dev-dependencies]
+criterion = "0.4"
+
+[[bench]]
+name = "metascraper"
+harness = false
