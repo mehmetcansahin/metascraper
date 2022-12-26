@@ -1,18 +1,13 @@
 # MetaScraper
 
+[![Rust](https://github.com/mehmetcansahin/metascraper/actions/workflows/rust.yml/badge.svg)](https://github.com/mehmetcansahin/metascraper/actions/workflows/rust.yml)
 [![crates.io](https://img.shields.io/crates/v/metascraper.svg)](https://crates.io/crates/metascraper)
 [![Released API docs](https://docs.rs/metascraper/badge.svg)](https://docs.rs/metascraper)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-MetaScraper is a extracts metadata information of a website.
+MetaScraper is a extracts metadata information of a website. MetaScraper uses [tl](https://github.com/y21/tl) as its html parser. This choice was made because tl was the fastest in benchmark tests. For more information, visit the [parse_query_bench](https://github.com/mehmetcansahin/parse_query_bench) GitHub page.
 
 ## Usage
-
-Add the following line to your Cargo.toml file:
-
-```toml
-metascraper = "0.1.0"
-```
 
 ```rust
 let input = include_str!("test.html");
@@ -32,10 +27,6 @@ println!("{:?}", metadata);
 //         ])
 // }
 ```
-
-## TODO
-
-- Example
 
 ## License
 

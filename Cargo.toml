@@ -2,7 +2,7 @@
 name = "metascraper"
 version = "0.2.0"
 description = "MetaScraper is a extracts metadata information of a website."
-authors = ["MehmetCan ŞAHİN <sahinmcan@gmail.com>"]
+authors = ["Mehmetcan ŞAHİN <sahinmcan@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 documentation = "https://docs.rs/metascraper"
