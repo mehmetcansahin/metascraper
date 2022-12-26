@@ -12,6 +12,7 @@ MetaScraper is a extracts metadata information of a website. MetaScraper uses [t
 ```rust
 let input = include_str!("test.html");
 let metascraper = MetaScraper::parse(input).unwrap();
+println!("{}", metascraper.title().unwrap());
 let metadata = metascraper.metadata();
 println!("{:?}", metadata);
 // MetaData {
