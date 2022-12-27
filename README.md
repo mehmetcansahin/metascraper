@@ -5,7 +5,11 @@
 [![Released API docs](https://docs.rs/metascraper/badge.svg)](https://docs.rs/metascraper)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
-MetaScraper is a extracts metadata information of a website. MetaScraper uses [tl](https://github.com/y21/tl) as its html parser. This choice was made because tl was the fastest in benchmark tests. For more information, visit the [parse_query_bench](https://github.com/mehmetcansahin/parse_query_bench) GitHub page.
+MetaScraper is a extracts metadata information of a website.
+
+
+> MetaScraper uses [tl](https://github.com/y21/tl) as its html parser. This choice was made because tl was the fastest in benchmark tests. For more information, visit the [parse_query_bench](https://github.com/mehmetcansahin/parse_query_bench) GitHub page.
+
 
 ## Usage
 
