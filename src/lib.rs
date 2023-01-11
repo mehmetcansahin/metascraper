@@ -110,6 +110,7 @@ impl MetaScraper<'_> {
     /// Returns the rss
     pub fn rss(&self) -> Option<String> {
         self.attribute(r#"link[type*=rss]"#, "href")
+            .or_else(|| self.attribute("link[type*=atom]", "href"))
             .or_else(|| self.attribute("meta[property*=feed]", "href"))
             .or_else(|| self.attribute("meta[property*=atom]", "href"))
     }
@@ -130,6 +131,7 @@ impl MetaScraper<'_> {
             .or_else(|| self.attribute("meta[property*=description]", "content"))
             .or_else(|| self.attribute("meta[itemprop*=description]", "content"))
             .or_else(|| self.attribute("meta[description]", "description"))
+            .or_else(|| self.inner_text("p[id=description]"))
     }
 
     /// Returns the canonical
@@ -149,7 +151,7 @@ impl MetaScraper<'_> {
 
     /// Returns the image
     pub fn image(&self) -> Option<String> {
-        self.attribute("meta[property*=image]", "content")
+        self.attribute("meta[property=og:image]", "content")
             .or_else(|| self.attribute("meta[name*=image]", "content"))
             .or_else(|| self.attribute("meta[itemprop*=image]", "content"))
             .or_else(|| self.attribute("article img[src]", "src"))
@@ -225,5 +227,23 @@ mod tests {
             Some("https://mehmetcan.sahin.dev".to_string())
         );
         assert_eq!(metadata.rss, Some("rss.xml".to_string()));
+    }
+
+    #[test]
+    fn test_web_page() {
+        let input = reqwest::blocking::get("https://www.w3.org/")
+            .unwrap()
+            .text()
+            .unwrap();
+
+        let metascraper = MetaScraper::parse(&input).unwrap();
+        let metadata = metascraper.metadata();
+        assert_eq!(
+            metadata.title,
+            Some("World Wide Web Consortium (W3C)".to_string())
+        );
+        assert_eq!(metadata.language, Some("en".to_string()));
+        assert_eq!(metadata.description, Some("The World Wide Web Consortium (W3C) is an international community where Member organizations, a full-time staff, and the public work together to develop Web standards.".to_string()));
+        assert_eq!(metadata.rss, Some("/blog/news/feed/atom".to_string()));
     }
 }
